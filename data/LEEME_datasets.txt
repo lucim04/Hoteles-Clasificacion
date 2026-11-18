@@ -1,0 +1,58 @@
+RESERVAS Y RESEÑAS DE HOTEL
+Datos sintéticos para docencia. Generados con NumPy y semilla 20261023. No representan un hotel ni clientes reales. CSV UTF-8, coma como separador y punto decimal. Los archivos son independientes y no deben unirse. Una fila representa una reserva o una reseña, según el archivo.
+
+01_reservas_hotel.csv
+6.000 reservas, 480 ausencias (8 %). Objetivo: no_presentado, 1=el cliente no se presenta, 0=se presenta. Etiqueta conocida después de la fecha de llegada; nunca utilizarla como predictor.
+id_reserva: identificador, excluir de X.
+antelacion_dias: días entre reserva y llegada prevista.
+noches: noches reservadas.
+huespedes: número de huéspedes.
+precio_noche_eur: precio por noche en euros.
+reservas_previas: reservas anteriores del cliente en el hotel.
+ausencias_previas: indicador 0/1 de alguna ausencia en reservas anteriores; siempre 0 si no hay reservas anteriores.
+cambios_reserva: número de cambios realizados hasta el momento de predicción.
+solicitudes_especiales: número de solicitudes registradas.
+deposito_pagado: indicador 0/1 de depósito abonado.
+llegada_fin_semana: indicador 0/1 de llegada prevista en fin de semana.
+Todos los predictores están disponibles al realizar la predicción antes de la llegada. El coste propuesto (70 € por FN y 3 € por FP) es un supuesto didáctico fijo; no se deriva del precio de la reserva. El conjunto usa señales de riesgo solapadas, reservas sin ausencia con comportamiento inusual y atributos sin relación con el objetivo.
+
+02_reseñas_valoracion.csv
+3.200 reseñas. Objetivo valoracion: positiva, neutra o negativa. Una clase por reseña.
+id_reseña: identificador, excluir de X.
+n_palabras: número de palabras.
+n_expresiones_positivas y n_expresiones_negativas: recuentos de expresiones potencialmente positivas y negativas.
+n_intensificadores: recuento de expresiones de intensidad.
+n_exclamaciones: número de signos de exclamación.
+n_terminos_limpieza, n_terminos_personal y n_terminos_ubicacion: recuentos de términos relacionados con esos temas.
+porcentaje_mayusculas: porcentaje de caracteres alfabéticos en mayúscula, de 0 a 100.
+Las expresiones se simulan con ruido y solapamiento. No hay nota numérica que determine directamente la valoración ni se incluye texto.
+
+03_reseñas_quejas.csv
+2.800 reseñas. Objetivos: queja_limpieza, queja_ruido, queja_atencion, queja_instalaciones. Cada uno es 0/1. Pueden coexistir y puede no haber ninguna queja. Excluir los cuatro de X.
+id_reseña: identificador, excluir de X.
+n_palabras: número de palabras.
+n_expresiones_limpieza, n_expresiones_ruido, n_expresiones_atencion y n_expresiones_instalaciones: recuentos de expresiones relacionadas con cada asunto.
+n_expresiones_negativas: recuento de expresiones potencialmente negativas.
+n_exclamaciones: número de signos de exclamación.
+porcentaje_mayusculas: porcentaje de caracteres alfabéticos en mayúscula, de 0 a 100.
+Mencionar un tema no implica necesariamente una queja. Recuentos y etiquetas comparten señales latentes con ruido. No son reglas deterministas y no se incluye texto real.
+
+CARGA
+import pandas as pd
+d = pd.read_csv("01_reservas_hotel.csv")
+X = d.drop(columns=["id_reserva", "no_presentado"])
+y = d["no_presentado"]
+
+d = pd.read_csv("02_reseñas_valoracion.csv")
+X = d.drop(columns=["id_reseña", "valoracion"])
+y = d["valoracion"]
+
+d = pd.read_csv("03_reseñas_quejas.csv")
+etiquetas = ["queja_limpieza", "queja_ruido", "queja_atencion", "queja_instalaciones"]
+X = d.drop(columns=["id_reseña"] + etiquetas)
+Y = d[etiquetas]
+
+Reservar el 25 % para test con random_state=42. Estratificar por y en binario y multiclase. Separación aleatoria simple en multietiqueta; no pasar la matriz Y a stratify. Si se eligen parámetros o umbrales, obtener validación solo del entrenamiento. Escalar y remuestrear dentro del Pipeline, únicamente sobre entrenamiento.
+
+PIPELINES
+Utilizar sklearn.pipeline.Pipeline para preprocesamiento y clasificador. Si hay remuestreo, utilizar imblearn.pipeline.Pipeline e incluir el sampler. Pasar el Pipeline completo a la validación cruzada; no escalar ni remuestrear antes de dividir los datos.

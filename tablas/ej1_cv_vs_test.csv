@@ -1,0 +1,5 @@
+,"Validación cruzada, umbral 0,5","Test, umbral 0.5","Test, umbral 0.3"
+F1,0.254 ± 0.016,0.272,0.194
+precision,0.157 ± 0.011,0.168,0.109
+recall,0.672 ± 0.052,0.717,0.908
+accuracy,0.684 ± 0.018,0.693,0.397

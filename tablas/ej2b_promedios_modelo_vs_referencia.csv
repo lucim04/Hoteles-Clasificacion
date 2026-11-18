@@ -1,0 +1,7 @@
+,,precision,recall,F1
+"Modelo (OvR + LR, umbral 0,5)",macro,0.6308,0.2832,0.3862
+"Modelo (OvR + LR, umbral 0,5)",micro,0.6314,0.3035,0.41
+"Modelo (OvR + LR, umbral 0,5)",weighted,0.6284,0.3035,0.4058
+Referencia (todo 0),macro,0.0,0.0,0.0
+Referencia (todo 0),micro,0.0,0.0,0.0
+Referencia (todo 0),weighted,0.0,0.0,0.0

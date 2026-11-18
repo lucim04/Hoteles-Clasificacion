@@ -1,0 +1,8 @@
+,precision,recall,F1
+negativa,0.593,0.425,0.495
+neutra,0.487,0.321,0.387
+positiva,0.689,0.87,0.769
+macro,0.59,0.539,0.55
+micro,0.639,0.639,0.639
+weighted,0.614,0.639,0.613
+accuracy,,,0.639

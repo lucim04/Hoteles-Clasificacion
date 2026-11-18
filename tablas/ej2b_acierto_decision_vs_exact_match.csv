@@ -1,0 +1,4 @@
+,Modelo,Referencia (todo 0)
+Acierto por decisión (1 − Hamming loss),0.8221,0.7964
+Exact match (conjunto completo de etiquetas),0.4557,0.4143
+F1 micro,0.41,0.0
